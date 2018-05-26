@@ -44,10 +44,13 @@ class Application(Frame):  # 从Frame派生出Application类，它是所有widge
 
     def selectPath(self):
         path_ = askopenfile()
-        path_name = path_.name
-        self.txt.insert(1.0,path_name)
-        # path.set(path_)
-        self.file_path = path_name
+        if path_ != None:
+            path_name = path_.name
+            self.txt.insert(1.0,path_name)
+            # path.set(path_)
+            self.file_path = path_name
+        else:
+            pass
 
     def clearText(self):
         self.name = None
