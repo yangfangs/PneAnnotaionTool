@@ -45,7 +45,7 @@ class AnnoTool(object):
 
     def on_press(self,event):
         """mouse action"""
-        print("my position:" ,event.button,event.xdata, event.ydata)
+        # print("my position:" ,event.button,event.xdata, event.ydata)
         fig = event.inaxes.figure
         self.coordinate.append([event.xdata,event.ydata])
         self.w_coordinate.append(self.ics_2_pcs([event.xdata,event.ydata]))
@@ -107,23 +107,4 @@ if __name__ == '__main__':
     foo.star_img()
     foo.save_img()
     foo.world_coordinate()
-
-
-# curr_pos = 0
-# plots = first_patient_pixels
-# def key_event(e):
-#     global curr_pos
-#
-#     if e.key == "right":
-#         curr_pos = curr_pos + 1
-#     elif e.key == "left":
-#         curr_pos = curr_pos - 1
-#     else:
-#         return
-#     curr_pos = curr_pos % len(plots)
-#
-#     plt.imshow(first_patient_pixels[curr_pos], cmap=plt.cm.gray, animated=True)
-
-# fig = plt.figure()
-# fig.canvas.mpl_connect('key_press_event', key_event)
 

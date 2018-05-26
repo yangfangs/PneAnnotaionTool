@@ -1,9 +1,7 @@
 from tkinter import *
 import tkinter.messagebox as messagebox
 from tkinter.filedialog import askopenfile
-
 import pandas
-
 from anntool import AnnoTool
 
 
