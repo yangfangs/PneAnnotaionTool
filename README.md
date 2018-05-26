@@ -44,22 +44,6 @@ $ PneAnnotaionTool
 
 # PCS to WCS method
 
-$\begin{split}\begin{bmatrix} P_x\\
-                P_y\\
-                P_z\\
-                1 \end{bmatrix} =
-\begin{bmatrix} X_x\Delta{i} & Y_x\Delta{j} & 0 & S_x \\
-                X_y\Delta{i} & Y_y\Delta{j} & 0 & S_y \\
-                X_z\Delta{i} & Y_z\Delta{j} & 0 & S_z \\
-                0   & 0   & 0 & 1 \end{bmatrix}
-\begin{bmatrix} i\\
-                j\\
-                0\\
-                1 \end{bmatrix}
-= M
-\begin{bmatrix} i\\
-                j\\
-                0\\
-                1 \end{bmatrix}\end{split}$
+![method](https://github.com/yangfangs/PneAnnotaionTool/blob/master/example_figure/method.png)
 
 > The detail information in [Defining the DICOM orientation](http://nipy.org/nibabel/dicom/dicom_orientation.html)
