@@ -1,8 +1,10 @@
 from setuptools import setup
 
+import version
+
 setup(
     name='PneAnnotaionTool',
-    version='0.0.1',
+    version=version,
     packages=[''],
     entry_points={
         "console_scripts": ['PneAnnotaionTool = main:main']
