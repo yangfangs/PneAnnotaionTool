@@ -1,87 +1,112 @@
 
-import numpy as np # linear algebra
-import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
-# import dicom
+import numpy as np
 import pydicom
-import os
-import scipy.ndimage
 import matplotlib.pyplot as plt
-import matplotlib.animation as animation
-from skimage import measure, morphology
-from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
 
+class AnnoTool(object):
+
+    def __init__(self,pic_path):
+        self.pic_path = pic_path
+        self.image = None
+        self.fig = None
+        self.coordinate = []
+        self.w_coordinate = []
+        self.seriesuid = None
+
+    def get_pixels_hu(self):
+        """read dicom and trans to figure"""
+        slices = pydicom.dcmread(self.pic_path)
+        self.position = slices.ImagePositionPatient
+        self.orientation = slices.ImageOrientationPatient
+        self.pixelSpa = slices.PixelSpacing
+        self.seriesuid = slices.SeriesInstanceUID
+        image = slices.pixel_array
+        # Convert to int16 (from sometimes int16),
+        # should be possible as values should always be low enough (<32k)
+        image = image.astype(np.int16)
+
+        # Set outside-of-scan pixels to 0
+        # The intercept is usually -1024, so air is approximately 0
+        image[image == -2000] = 0
+
+        # Convert to Hounsfield units (HU)
 
 
+        intercept = slices.RescaleIntercept
+        slope = slices.RescaleSlope
 
-# Load the scans in given folder path
-def load_scan(path):
-    slices = pydicom.read_file(path)
-    # slices.sort(key=lambda x: float(x.ImagePositionPatient[2]))
-    # try:
-    #     slice_thickness = np.abs(slices[0].ImagePositionPatient[2] - slices[1].ImagePositionPatient[2])
-    # except:
-    #     slice_thickness = np.abs(slices[0].SliceLocation - slices[1].SliceLocation)
-    #
-    # for s in slices:
-    #     s.SliceThickness = slice_thickness
+        if slope != 1:
+            image = slope * image.astype(np.float64)
+            image= image.astype(np.int16)
 
-    return slices
+            image += np.int16(intercept)
+        self.image = image
 
+    def on_press(self,event):
+        """mouse action"""
+        print("my position:" ,event.button,event.xdata, event.ydata)
+        fig = event.inaxes.figure
+        self.coordinate.append([event.xdata,event.ydata])
+        self.w_coordinate.append(self.ics_2_pcs([event.xdata,event.ydata]))
+        plt.scatter(event.xdata,event.ydata)
+        fig.canvas.draw()
 
-def get_pixels_hu(slices):
-    image = slices.pixel_array
-    # Convert to int16 (from sometimes int16),
-    # should be possible as values should always be low enough (<32k)
-    image = image.astype(np.int16)
+    def world_coordinate(self):
+        """tans annotation coordinate to word coordinate system"""
+        w_coor = list(map(self.ics_2_pcs,self.coordinate))
+        self.w_coordinate = w_coor
+        print(w_coor)
+    def ics_2_pcs(self,coor):
 
-    # Set outside-of-scan pixels to 0
-    # The intercept is usually -1024, so air is approximately 0
-    image[image == -2000] = 0
+        """
+        trans image coordinate system (ICS) to DICOM Patient Coordinate System (PCS).
+        PCS: also is the world coordinate syestem.
 
-    # Convert to Hounsfield units (HU)
-
-
-    intercept = slices.RescaleIntercept
-    slope = slices.RescaleSlope
-
-    if slope != 1:
-        image = slope * image.astype(np.float64)
-        image= image.astype(np.int16)
-
-        image += np.int16(intercept)
-
-    return image
-
+        example:
+        impos = np.array([100, 100, 50])
+        x = 5
+        y = 6
+        orient_x = np.array([1, 0, 0])
+        orient_y = np.array([0, 1, 0])
+        pixels_x = 0.5
+        pixels_y = 0.5
 
 
+        :param x: coord x
+        :param y: coord y
+        :return: voxel coord
+        """
+        x = coor[0]
+        y = coor[1]
+        impos = np.array(self.position)
+        orient_x = np.array(self.orientation[:3])
+        orient_y = np.array(self.orientation[-3:])
+        pixels_x = self.pixelSpa[0]
+        pixels_y = self.pixelSpa[1]
+        voxel_x_y_z = impos + orient_x * pixels_x * x + orient_y * pixels_y * y
+        return voxel_x_y_z
 
-def on_press(event):
-    print("my position:" ,event.button,event.xdata, event.ydata)
-    fig = event.inaxes.figure
-    plt.scatter(event.xdata,event.ydata)
-    fig.canvas.draw()
-# fig.canvas.mpl_connect('button_press_event', on_press)
+    def star_img(self):
+        fig = plt.figure()
+        plt.imshow(self.image, cmap=plt.cm.gray, animated=True)
+        fig.canvas.mpl_connect('button_press_event', self.on_press)
+        self.fig = fig
+        plt.show()
 
-def star_img(img):
-    fig = plt.figure()
-    plt.imshow(img, cmap=plt.cm.gray, animated=True)
-    fig.canvas.mpl_connect('button_press_event', on_press)
-    plt.show()
-    fig.savefig('/home/yangfang/example2222.png')
-    return fig
+        # fig.savefig('/home/yangfang/example2222.png')
 
-def saveimg(fig):
-    fig.savefig('/home/yangfang/example2222.png')
+    def save_img(self):
+        self.fig.savefig(self.pic_path + '.png')
 
 
 if __name__ == '__main__':
 
-    first_patient = load_scan('/home/yangfang/CT/CT_FangYang/sample_huaxi/p1/IM000036')
-    first_patient_pixels = get_pixels_hu(first_patient)
-    fig = star_img(first_patient_pixels)
-    saveimg(fig)
-
+    foo = AnnoTool('/home/yangfang/CT/CT_FangYang/sample_huaxi/p1/IM000036')
+    foo.get_pixels_hu()
+    foo.star_img()
+    foo.save_img()
+    foo.world_coordinate()
 
 
 # curr_pos = 0

@@ -2,7 +2,9 @@ from tkinter import *
 import tkinter.messagebox as messagebox
 from tkinter.filedialog import askopenfile
 
-from anntool import load_scan, get_pixels_hu, star_img
+import pandas
+
+from anntool import AnnoTool
 
 
 class Application(Frame):  # 从Frame派生出Application类，它是所有widget的父容器
@@ -10,10 +12,10 @@ class Application(Frame):  # 从Frame派生出Application类，它是所有widge
         Frame.__init__(self, master)
         self.pack()  # 将widget加入到父容器中并实现布局
         self.createWidgets()
-
+        self.foo = None
         self.file_path = None
     def createWidgets(self):
-        self.helloLabel = Label(self, text='Hi')  # 创建一个标签显示内容到窗口
+        self.helloLabel = Label(self, text='Hi, Welcome to use Annotation tool ')  # 创建一个标签显示内容到窗口
         self.helloLabel.pack()
 
         self.quitButton = Button(self, text='Choose file', command=self.selectPath)
@@ -28,12 +30,19 @@ class Application(Frame):  # 从Frame派生出Application类，它是所有widge
         self.clearButton = Button(self, text='Clear', command=self.clearText)
         self.clearButton.pack(side=RIGHT)
 
-        self.fileButton = Button(self, text='Save', command=self.quit)
-        self.fileButton.pack()
+        self.saveButton = Button(self, text='Save', command=self.save)
+        self.saveButton.pack()
 
 
     def hello(self):
         messagebox.showinfo('Message', 'hello,%s' % self.file_path)  # 显示输出
+
+    def save(self):
+        self.foo.save_img()
+        df_anno = pandas.DataFrame(self.foo.w_coordinate, columns=["coordX", "coordY", "coordZ"])
+        df_anno.insert(0,'seriesuid',self.foo.seriesuid)
+        df_anno.to_csv(self.foo.pic_path + ".csv",index=False)
+        messagebox.showinfo('Message', 'Already Saved!')
 
     def selectPath(self):
         path_ = askopenfile()
@@ -48,14 +57,17 @@ class Application(Frame):  # 从Frame派生出Application类，它是所有widge
 
     def startAnno(self):
         if self.file_path != None:
-            first_patient = load_scan(self.file_path)
-            first_patient_pixels = get_pixels_hu(first_patient)
-            star_img(first_patient_pixels)
+            foo = AnnoTool(self.file_path)
+            self.foo = foo
+            self.foo.get_pixels_hu()
+            self.foo.star_img()
         else:
             messagebox.showinfo('Message', "Not found DICOM file path. Please choose file!")
+
+
 
 if __name__ == '__main__':
 
     app = Application()
-    app.master.title("Annotation")  # 窗口标题
+    app.master.title("Annotation tool")  # 窗口标题
     app.mainloop()  # 主消息循环</span>
