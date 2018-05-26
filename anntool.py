@@ -3,6 +3,8 @@ import numpy as np
 import pydicom
 import matplotlib.pyplot as plt
 
+import version
+
 
 class AnnoTool(object):
 
@@ -107,4 +109,5 @@ if __name__ == '__main__':
     foo.star_img()
     foo.save_img()
     foo.world_coordinate()
+
 

@@ -1,11 +1,12 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 import version
+pen_version = version.version
 
 setup(
     name='PneAnnotaionTool',
-    version=version,
-    packages=[''],
+    version=pen_version,
+    packages=find_packages(),
     entry_points={
         "console_scripts": ['PneAnnotaionTool = main:main']
     },
