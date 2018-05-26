@@ -6,6 +6,14 @@ An APP for DICOM format file, the main feature are:
 2. Annotating label in the figure.
 3. Convert Pixel coordinate system to the word coordinate system.
 
+# Dependencies
+
+* Python 3.6
+* numpy
+* pydicom
+* matplotlib
+* pandas
+
 # install
 
 ```python
