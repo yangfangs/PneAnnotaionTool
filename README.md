@@ -47,7 +47,7 @@ $ Python3 main.py
 
 * Double-click the `annotation.exe` application.
 
-![win app](https://github.com/yangfangs/PneAnnotaionTool/blob/master/example_figure/annotation2.png)
+![win app](https://github.com/yangfangs/PneAnnotaionTool/blob/master/example_figure/annotation2.gif)
 
 
 
