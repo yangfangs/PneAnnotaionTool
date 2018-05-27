@@ -57,11 +57,15 @@ $ Python3 main.py
 
 # Annotation
 
-* When click `Save` the coordinate label file will be saved as `csv` format.
+* When click `Save` the annotation figure will be saved as `png` format.
 
 ![annotation example](https://github.com/yangfangs/PneAnnotaionTool/blob/master/example_figure/anno_pig.png)
 
 # label coordinate
+
+* When click `Save` the coordinate label file will be saved as `csv` format.
+
+* The label contain `series UID`, `Coord X`, `Coord Y` and `coord Z` by world coordinate system.
 
 ![label result](https://github.com/yangfangs/PneAnnotaionTool/blob/master/example_figure/label_csv.png)
 
