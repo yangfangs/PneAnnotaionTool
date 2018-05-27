@@ -1,5 +1,6 @@
 # An APP for DICOM format file label annotation
 
+
 An APP for DICOM format file, the main feature are:
 
 1. Read DICOM format figure.
@@ -14,7 +15,9 @@ An APP for DICOM format file, the main feature are:
 * matplotlib
 * pandas
 
-# install
+# For Linux
+
+## install
 
 ```python
 
@@ -22,18 +25,39 @@ $ python setup.py install
 
 ```
 
-# usage
+## usage
 
 ```python
 $ PneAnnotaionTool
 
 ```
 
+## Other way you can start in terminal
+
+* First of all, you must ensure that all the above dependencies are installed.
+
+```
+$ Python3 main.py
+
+```
+
+# For windows(Test for win 10)
+
+* Download APP in [here](https://pan.baidu.com/s/1CIprPiYAdBZMy2bksB-Kmg) and code is `8zef`
+
+* Double-click the `annotation.exe` application.
+
+![win app](https://github.com/yangfangs/PneAnnotaionTool/blob/master/example_figure/annotation2.png)
+
+
+
 # Overview
 
 ![main app](https://github.com/yangfangs/PneAnnotaionTool/blob/master/example_figure/main.png)
 
-# annotation
+# Annotation
+
+* When click `Save` the coordinate label file will be saved as `csv` format.
 
 ![annotation example](https://github.com/yangfangs/PneAnnotaionTool/blob/master/example_figure/anno_pig.png)
 
