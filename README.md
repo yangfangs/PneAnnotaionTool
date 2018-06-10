@@ -51,7 +51,9 @@ $ Python3 main.py
 
 # For windows(Test for win 10)
 
-* Download APP in [here](https://pan.baidu.com/s/1CIprPiYAdBZMy2bksB-Kmg) and code is `8zef`
+* Download APP in [PneAnnotaionTool v0.0.2](https://pan.baidu.com/s/1CIprPiYAdBZMy2bksB-Kmg) and code is `8zef`
+
+* Download APP in [PneAnnotaionTool v0.0.3](https://pan.baidu.com/s/1doW1mo_HqrYPxLH1BUrUTQ) and code is `kkke`
 
 * Double-click the `annotation.exe` application.
 
