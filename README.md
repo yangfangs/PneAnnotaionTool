@@ -4,8 +4,16 @@
 An APP for DICOM format file, the main feature are:
 
 1. Read DICOM format figure.
-2. Annotating label in the figure.
-3. Convert Pixel coordinate system to the word coordinate system.
+
+2. Annotating label in the figure by click left mouse button.
+
+3. Delete label in the figure by click right mouse button.
+
+4. Save Annotation labels as Pixel coordinate to local disk.
+
+5. Save Annotation labels as world coordinate system.
+
+3. Convert Pixel coordinate system to the world coordinate system.
 
 # Dependencies
 
