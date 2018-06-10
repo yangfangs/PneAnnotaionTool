@@ -1,7 +1,9 @@
+import os
 from tkinter import *
 import tkinter.messagebox as messagebox
 from tkinter.filedialog import askopenfile
-import pandas
+import pandas as pd
+
 from anntool import AnnoTool
 
 
@@ -12,6 +14,8 @@ class Application(Frame):  # 从Frame派生出Application类，它是所有widge
         self.createWidgets()
         self.foo = None
         self.file_path = None
+        self.read_coord = None
+
     def createWidgets(self):
         self.helloLabel = Label(self, text='Hi, Welcome to use Annotation tool ')  # 创建一个标签显示内容到窗口
         self.helloLabel.pack()
@@ -37,9 +41,13 @@ class Application(Frame):  # 从Frame派生出Application类，它是所有widge
 
     def save(self):
         self.foo.save_img()
-        df_anno = pandas.DataFrame(self.foo.w_coordinate, columns=["coordX", "coordY", "coordZ"])
+        self.foo.world_coordinate()
+        df_anno = pd.DataFrame(self.foo.w_coordinate, columns=["coordX", "coordY", "coordZ"])
         df_anno.insert(0,'seriesuid',self.foo.seriesuid)
         df_anno.to_csv(self.foo.pic_path + ".csv",index=False)
+        df_coor = pd.DataFrame(self.foo.coordinate, columns=["coordX", "coordY"])
+        df_coor.insert(0, 'seriesuid', self.foo.seriesuid)
+        df_coor.to_csv(self.foo.pic_path + "_coord.csv", index=False)
         messagebox.showinfo('Message', 'Already Saved!')
 
     def selectPath(self):
@@ -57,16 +65,30 @@ class Application(Frame):  # 从Frame派生出Application类，它是所有widge
         self.txt.delete(0.0, END)
 
     def startAnno(self):
+
         if self.file_path != None:
             foo = AnnoTool(self.file_path)
             self.foo = foo
+            self.read_coord_data()
+            # print('haha',self.read_coord)
+            if self.read_coord:
+                self.foo.set_coord(self.read_coord)
             self.foo.get_pixels_hu()
             self.foo.star_img()
+
         else:
             messagebox.showinfo('Message', "Not found DICOM file path. Please choose file!")
 
+    def read_coord_data(self):
+        """ read the coord information if dir have the data"""
+        coord_path = self.foo.pic_path + "_coord.csv"
 
-
+        if os.path.isfile(coord_path):
+            df = pd.read_csv(coord_path)
+            coord = [df.coordX.tolist(), df.coordY.tolist()]
+            self.read_coord = coord
+        else:
+            self.read_coord = False
 if __name__ == '__main__':
 
     app = Application()
